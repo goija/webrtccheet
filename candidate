@@ -1,0 +1,3 @@
+pc.onicecandidate = e => {
+  if (e.candidate) send({ type: 'candidate', candidate: e.candidate });
+};
