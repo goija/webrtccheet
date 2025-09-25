@@ -1,0 +1,49 @@
+Diagnostiek en tuning
+
+    getStats: monitor outbound-rtp/inbound-rtp; rtt, jitter, framesDropped
+    Forceer codec: SDP munging of RTCRtpTransceiver.setCodecPreferences
+    Bitrate/kwaliteit: setParameters encodings; simulcast met { rid: 'q', scaleResolutionDownBy: 2 }
+    Heronderhandelen: bij schermdelen/mute-unmute/track-switch
+    ICE problemen: test TURN over udp/tcp/tls; controleer port blocking
+
+WHIP/WHEP (live streaming)
+
+    WHIP: WebRTC ingest naar mediaserver via HTTP endpoint
+    WHEP: WebRTC egress (playout) via HTTP endpoint
+    Gebruik voor low-latency streaming als alternatief voor RTMP/HLS-LL
+
+AI, XR, IoT
+
+    Realtime AI-assistenten: bidirectionele audio via WebRTC + low-latency TTS/ASR
+    XR/social: SFU + simulcast/SVC; lage end-to-end latency
+    IoT/edge: camera’s/drones; TURN-only + beperkte codecs; bandwidth caps
+
+Schema’s (tekstueel)
+
+    P2P call
+        User A: getUserMedia → RTCPeerConnection → createOffer → send SDP
+        User B: setRemote(offer) → getUserMedia → createAnswer → send SDP
+        ICE: candidates uitwisselen → DTLS handshake → SRTP media + DataChannel
+
+    SFU conferentie
+        Clients: publish (uplink) → SFU
+        SFU: subscribe routes → elke client ontvangt geschikte lagen (simulcast/SVC)
+        Optioneel: client-side E2EE met Insertable Streams voor end-to-end
+
+Best practices
+
+    Altijd TURN configureren (udp + tcp + tls) voor betrouwbaarheid
+    Gebruik simulcast bij SFU; SVC met VP9/AV1 waar ondersteund
+    Beperk permissies: gebruik deviceId’s alleen wanneer nodig; prompt on demand
+    Hergebruik RTCPeerConnection per peer; sluit tracks/pc netjes af
+    Log SDP en ICE events; integreer callstats/telemetry vroeg
+
+Quick checklist
+
+    Secure context (https)
+    STUN + TURN (udp/tcp/tls)
+    Trickle ICE aan
+    getUserMedia constraints ingesteld
+    Simulcast/SVC bij SFU
+    getStats monitoring
+    fallback paths (screen share, mute, reconnect)
