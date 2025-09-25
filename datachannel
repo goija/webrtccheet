@@ -1,0 +1,2 @@
+const dc = pc.createDataChannel('chat', { ordered: false, maxRetransmits: 0 });
+dc.onmessage = e => console.log('msg', e.data);
